@@ -45,8 +45,8 @@ jobs:
     - name: Git push
       continue-on-error: true
       run: |
-        git config --local user.name "gitea-action"
-        git config --local user.email "git@cooluc.com"
+        git config --global user.name 'actions'
+        git config --global user.email 'action@github.com'
         [ -d .git ] && git init
         git add --all
         git commit -sm "${{ env.RELEASE_NAME }}"
