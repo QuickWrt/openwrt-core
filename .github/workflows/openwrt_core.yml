@@ -18,7 +18,8 @@ jobs:
     strategy:
       matrix:
         target:
-          - aarch64_cortex-a53
+          - aarch64_generic
+          - x86_64
 
     steps:
     - name: Checkout
@@ -30,11 +31,15 @@ jobs:
     - name: Setup variables
       run: |
         sudo timedatectl set-timezone 'Asia/Shanghai'
-        echo "target=aarch64_cortex-a53-6.6" >> "$GITHUB_ENV"
+        if [ "${{ matrix.target }}" = "aarch64_generic" ]; then
+          echo "target=aarch64-6.6" >> "$GITHUB_ENV"
+        elif [ "${{ matrix.target }}" = "x86_64" ]; then
+          echo "target=x86_64-6.6" >> "$GITHUB_ENV"
+        fi
 
     - name: Sync kernel modules
       run: |
-        kmod=$(curl -sk "https://api.github.com/repos/QuickWrt/immortalwrt-mt798x/releases" | grep "browser_download_url" | grep "${{ env.target }}" | sort -V | tail -1 | awk '{print $2}' | sed 's/\"//g')
+        kmod=$(curl -sk "https://api.github.com/repos/QuickWrt/ZeroWrt/releases" | grep "browser_download_url" | grep "${{ env.target }}" | sort -V | tail -1 | awk '{print $2}' | sed 's/\"//g')
         kmod_name=$(basename $kmod | sed 's/\.tar\.gz$//;s/^[^-]*-//')
         rm -rf $kmod_name
         curl -L $kmod -o $kmod_name.tar.gz --progress-bar
