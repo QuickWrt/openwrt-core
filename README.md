@@ -1,1 +1,1 @@
-# OpenWrt Kernel modules - Linux 6.6 LTS
+# OpenWrt Kernel modules - Linux 6.12 LTS
